@@ -8,6 +8,7 @@ You will also need psycopyg2 for python3 installed.
 1. Run python3 ```python3```
 2. Import the newsdata module ```import newsdata```
 3. Run one of the 3 functions w/in the module
+    ``newsdata.pop_articles("dbname")``
 
 ## Functions:
 #### pop_articles
