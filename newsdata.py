@@ -1,14 +1,15 @@
 import psycopg2
 
-#most popular articles of all time
-#which articles have been accessed the most
-#format:
+# most popular articles of all time
+# which articles have been accessed the most
+# format:
+
 
 def pop_articles(db_name):
-    db = psycopg2.connect(dbname = db_name)
+    db = psycopg2.connect(dbname=db_name)
     c = db.cursor()
-    #we want pages that don't result in errors, hence ='200 OK'
-    #since all paths start w/ '/article/', can use like to compare to slug
+    # we want pages that don't result in errors, hence ='200 OK'
+    # since all paths start w/ '/article/', can use like to compare to slug
     query = '''select articles.title, count(log.path) as views
                     from articles, log
                     where status='200 OK'
@@ -19,17 +20,17 @@ def pop_articles(db_name):
     rows = c.fetchall()
     db.close()
     for row in rows:
-        result = '{} - {}'.format(row[0],row[1])
+        result = '{} - {}'.format(row[0], row[1])
         print(result)
     return rows
 
 
-#Who are the most popoular article authors of all time?
-#which authors have the highest total aggregate views
-#format: "Author-# views"
+# Who are the most popoular article authors of all time?
+# which authors have the highest total aggregate views
+# format: "Author-# views"
 
 def pop_authors(db_name):
-    db = psycopg2.connect(dbname = db_name)
+    db = psycopg2.connect(dbname=db_name)
     c = db.cursor()
     query = '''select authors.name, count(log.path) as views
                     from authors, articles, log
@@ -42,19 +43,20 @@ def pop_authors(db_name):
     rows = c.fetchall()
     db.close()
     for row in rows:
-        result = '{} - {} views'.format(row[0],row[1])
+        result = '{} - {} views'.format(row[0], row[1])
         print(result)
     return rows
 
-#On which days did more than 1% of requests lead to errors?
-#Log tables that include error codes grouped by days
-#format: "date-#% errors"
+# On which days did more than 1% of requests lead to errors?
+# Log tables that include error codes grouped by days
+# format: "date-#% errors"
+
 
 def most_errors(db_name):
-    db = psycopg2.connect(dbname = db_name)
+    db = psycopg2.connect(dbname=db_name)
     c = db.cursor()
-    #set up views that pulled total errors (code!=200) and total views per days
-    #set up a subq to extract a percentage in way that where clause can be used
+    # set up views that pulled total errors (code!=200) and total views per day
+    # set upa subq to extract a percentage in way that where clause can be used
     query = '''select days, percentage
                 from (select date(errors.days) as days,
                   round(((errors.errors / daily_views.daily_views::float)*100)
@@ -67,6 +69,6 @@ def most_errors(db_name):
     rows = c.fetchall()
     db.close()
     for row in rows:
-        result = '{} - {}% errors'.format(row[0],row[1])
+        result = '{} - {}% errors'.format(row[0], row[1])
         print(result)
     return rows
