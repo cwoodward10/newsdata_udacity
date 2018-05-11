@@ -15,7 +15,7 @@ def pop_articles(db_name):
                     where status='200 OK'
                     and log.path like '/article/'||articles.slug
                     group by articles.title
-                    order views desc;'''
+                    order by views desc;'''
     c.execute(query)
     rows = c.fetchall()
     db.close()
@@ -63,8 +63,7 @@ def most_errors(db_name):
                   ::numeric,2) as percentage
                   from errors, daily_views
                   where errors.days=daily_views.days) as subq
-                  where percentage>1;
-'''
+                  where percentage>1;'''
     c.execute(query)
     rows = c.fetchall()
     db.close()
@@ -72,3 +71,22 @@ def most_errors(db_name):
         result = '{} - {}% errors'.format(row[0], row[1])
         print(result)
     return rows
+
+# Function to print out all 3 of the other function's outputs
+
+def news_print(db_name, file_name):
+    articles = pop_articles(db_name)
+    authors = pop_authors(db_name)
+    errors = most_errors(db_name)
+
+    # I probably should have just made this its own function
+    with open(file_name, mode='x') as f:
+        f.write('Most Popular Articles\n')
+        for article in articles:
+            f.write('{} - {} views\n'.format(article[0], article[1]))
+        f.write('\nMost Popular Authors\n')
+        for author in authors:
+            f.write('{} - {} views\n'.format(author[0], author[1]))
+        f.write('\nDays with >1% of Views as Errors\n')
+        for error in errors:
+            f.write('{} - {} views\n'.format(error[0], error[1]))

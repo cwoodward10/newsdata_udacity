@@ -7,8 +7,9 @@ You will also need psycopyg2 for python3 installed.
 ## To use:
 1. Run python3 ```python3```
 2. Import the newsdata module ```import newsdata```
-3. Run one of the 3 functions w/in the module
+3. Run one of the 4 functions w/in the module
     ex: ``newsdata.pop_articles("dbname")``
+    ex: ``newsdata.news_print("dbname","text.txt")``
 4. Enjoy the results
 
 ## Functions:
@@ -22,6 +23,10 @@ Returns a list of lists(author name, number of views)
 #### most_errors
 Prints a list of the days of the year that have more than 1% of total page views as errors.
 Retuns a list of lists(date, percentage)
+
+#### news_print
+Executes each of the above 3 functions.
+Saves the returns into a text file.
 
 ## Created views:
 I created a couple of views to help out with this. They are used in the most_errors function
